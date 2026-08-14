@@ -25,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenContact, onOpenResume }) =
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
       
-      const sections = ['hero', 'skripsi', 'workbench', 'cases', 'rotations', 'media', 'skills', 'guestbook'];
+      const sections = ['hero', 'skripsi', 'workbench', 'cases', 'rotations', 'media', 'skills'];
       const scrollPosition = window.scrollY + 180;
       
       for (const sectionId of sections) {
@@ -46,14 +46,24 @@ export const Header: React.FC<HeaderProps> = ({ onOpenContact, onOpenResume }) =
   }, []);
 
   const navItems = [
-    { id: 'skripsi', label: 'Riset Skripsi' },
-    { id: 'workbench', label: 'Meja Dietisien' },
-    { id: 'cases', label: 'Kasus PAGT' },
-    { id: 'rotations', label: 'Rotasi PKL' },
-    { id: 'media', label: 'Media Edukasi' },
-    { id: 'skills', label: 'Kompetensi' },
-    { id: 'guestbook', label: 'Buku Sidang' }
+    { id: 'hero', label: 'Profil' },
+    { id: 'skripsi', label: 'Riset' },
+    { id: 'workbench', label: 'Pengalaman' },
+    { id: 'media', label: 'Galeri' },
+    { id: 'skills', label: 'Kompetensi' }
   ];
+
+  // Cases & rotations are sub-sections of "Pengalaman" — they share its nav highlight
+  // even though the nav link itself anchors to the first section (workbench).
+  const navGroupForSection: Record<string, string> = {
+    hero: 'hero',
+    skripsi: 'skripsi',
+    workbench: 'workbench',
+    cases: 'workbench',
+    rotations: 'workbench',
+    media: 'media',
+    skills: 'skills'
+  };
 
   const scrollTo = (id: string) => {
     setMobileMenuOpen(false);
@@ -139,7 +149,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenContact, onOpenResume }) =
             {/* Desktop Navigation Links */}
             <div className="hidden lg:flex items-center gap-5 xl:gap-6 text-xs uppercase tracking-widest">
               {navItems.map((item) => {
-                const isActive = activeSection === item.id;
+                const isActive = navGroupForSection[activeSection] === item.id;
                 return (
                   <button
                     key={item.id}

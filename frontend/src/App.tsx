@@ -8,6 +8,7 @@ import { ExperienceRotationsSection } from './components/ExperienceRotationsSect
 import { MediaInfographicsSection } from './components/MediaInfographicsSection';
 import { SkillsCertificationsSection } from './components/SkillsCertificationsSection';
 import { ThesisSupportGuestbook } from './components/ThesisSupportGuestbook';
+import { GuestbookFloatingButton } from './components/GuestbookFloatingButton';
 import { ResumeModal } from './components/ResumeModal';
 import { ContactModal } from './components/ContactModal';
 import { Footer } from './components/Footer';
@@ -15,6 +16,7 @@ import { Footer } from './components/Footer';
 export default function App() {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isGuestbookOpen, setIsGuestbookOpen] = useState(false);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -65,16 +67,17 @@ export default function App() {
 
         {/* 7. Technical Skills & Verified Certifications */}
         <SkillsCertificationsSection />
-
-        {/* 8. Thesis Defense Guestbook & Encouragement Board */}
-        <ThesisSupportGuestbook />
       </main>
 
       {/* Footer */}
       <Footer
         onOpenResume={() => setIsResumeOpen(true)}
         onOpenContact={() => setIsContactOpen(true)}
+        onOpenGuestbook={() => setIsGuestbookOpen(true)}
       />
+
+      {/* Floating shortcut to Thesis Defense Guestbook & Encouragement Board */}
+      <GuestbookFloatingButton onClick={() => setIsGuestbookOpen(true)} />
 
       {/* Modals */}
       <ResumeModal
@@ -85,6 +88,11 @@ export default function App() {
       <ContactModal
         isOpen={isContactOpen}
         onClose={() => setIsContactOpen(false)}
+      />
+
+      <ThesisSupportGuestbook
+        isOpen={isGuestbookOpen}
+        onClose={() => setIsGuestbookOpen(false)}
       />
     </div>
   );

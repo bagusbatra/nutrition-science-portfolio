@@ -5,9 +5,10 @@ import { personalInfo } from '../data/portfolioData';
 interface FooterProps {
   onOpenResume: () => void;
   onOpenContact: () => void;
+  onOpenGuestbook: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenResume, onOpenContact }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenResume, onOpenContact, onOpenGuestbook }) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -78,7 +79,13 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume, onOpenContact }) =
                 <a href="#media" className="hover:text-[#F8BBD0] transition-colors">Media Leaflet & Infografis</a>
               </li>
               <li>
-                <a href="#guestbook" className="hover:text-[#F8BBD0] transition-colors">Buku Dukungan Sidang</a>
+                <button
+                  id="footer-open-guestbook-btn"
+                  onClick={onOpenGuestbook}
+                  className="hover:text-[#F8BBD0] transition-colors cursor-pointer text-left"
+                >
+                  Buku Dukungan Sidang
+                </button>
               </li>
             </ul>
           </div>

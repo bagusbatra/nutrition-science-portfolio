@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  HeartHandshake, 
-  Send, 
-  Sparkles, 
-  MessageSquareHeart, 
-  Award, 
-  Check, 
-  User, 
-  Smile
+import {
+  HeartHandshake,
+  Send,
+  Sparkles,
+  MessageSquareHeart,
+  Award,
+  Check,
+  User,
+  Smile,
+  X
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { GuestbookEntry } from '../types';
 
-export const ThesisSupportGuestbook: React.FC = () => {
+interface ThesisSupportGuestbookProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const ThesisSupportGuestbook: React.FC<ThesisSupportGuestbookProps> = ({ isOpen, onClose }) => {
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
   const [name, setName] = useState('');
   const [role, setRole] = useState('Rekan / Pengunjung');
@@ -23,6 +29,7 @@ export const ThesisSupportGuestbook: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    if (!isOpen) return;
     fetch('/api/guestbook')
       .then((res) => res.json())
       .then((data) =>
@@ -42,7 +49,7 @@ export const ThesisSupportGuestbook: React.FC = () => {
         )
       )
       .catch((err) => console.error('Failed to load guestbook entries', err));
-  }, []);
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,47 +104,48 @@ export const ThesisSupportGuestbook: React.FC = () => {
 
   const emojiOptions = ['🌸', '🩺', '✨', '🥗', '🎓', '💪', '💖', '🌿'];
 
+  if (!isOpen) return null;
+
   return (
-    <section id="guestbook" className="py-16 sm:py-20 bg-[#F9F5F6] relative border-b border-[#E8E0E3] overflow-hidden">
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        
-        {/* Section Header */}
+    <AnimatePresence>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.15 }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-6"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          className="bg-[#F9F5F6] rounded-[32px] max-w-5xl w-full max-h-[88vh] overflow-y-auto p-6 sm:p-8 border border-[#E8E0E3] shadow-2xl relative"
         >
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FCE4EC] border border-[#F8BBD0] text-[#2D2D2D] text-xs font-semibold uppercase tracking-wider mb-3">
-              <MessageSquareHeart className="w-3.5 h-3.5" />
-              <span>Community Support & Thesis Defense Wall</span>
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-10 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FCE4EC] border border-[#F8BBD0] text-[#2D2D2D] text-xs font-semibold uppercase tracking-wider mb-3">
+                <MessageSquareHeart className="w-3.5 h-3.5" />
+                <span>Community Support & Thesis Defense Wall</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-serif text-[#2D2D2D] tracking-tight">
+                Buku Tamu & <span className="italic text-[#2D2D2D] underline decoration-[#F8BBD0] decoration-4 underline-offset-8">Dukungan Sidang</span>
+              </h2>
+              <p className="text-sm text-[#666666] mt-3 max-w-2xl font-light">
+                Tinggalkan pesan semangat, masukan ilmiah, atau ucapan selamat untuk Nadhira menjelang ujian sidang sarjana gizi.
+              </p>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[#2D2D2D] tracking-tight">
-              Buku Tamu & <span className="italic text-[#2D2D2D] underline decoration-[#F8BBD0] decoration-4 underline-offset-8">Dukungan Sidang</span>
-            </h2>
-            <p className="text-sm sm:text-base text-[#666666] mt-3 max-w-2xl font-light">
-              Tinggalkan pesan semangat, masukan ilmiah, atau ucapan selamat untuk Nadhira menjelang ujian sidang sarjana gizi.
-            </p>
+
+            <div className="flex items-center gap-3 shrink-0">
+              <span className="font-mono bg-white px-4 py-2 rounded-full border border-[#E8E0E3] text-[#2D2D2D] font-bold uppercase tracking-wider text-[11px]">
+                {entries.length} Pesan Tersimpan
+              </span>
+              <button
+                id="guestbook-modal-close-x"
+                onClick={onClose}
+                className="w-9 h-9 rounded-full bg-white hover:bg-[#FCE4EC] text-[#2D2D2D] flex items-center justify-center font-bold text-sm cursor-pointer border border-[#E8E0E3] transition-colors shrink-0"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
-          <div className="text-xs text-[#666666]">
-            <span className="font-mono bg-white px-4 py-2 rounded-full border border-[#E8E0E3] text-[#2D2D2D] font-bold uppercase tracking-wider text-[11px]">
-              {entries.length} Pesan Tersimpan
-            </span>
-          </div>
-        </motion.div>
-
-        {/* 2-Column Grid: Submission Form vs Live Message Board */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.15 }}
-          transition={{ duration: 0.6 }}
-          className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start"
-        >
+          {/* 2-Column Grid: Submission Form vs Live Message Board */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
           
           {/* Left Column: Form */}
           <div className="lg:col-span-5 bg-white rounded-[32px] border border-[#E8E0E3] p-6 sm:p-8 shadow-sm">
@@ -275,11 +283,10 @@ export const ThesisSupportGuestbook: React.FC = () => {
             </AnimatePresence>
           </div>
 
+          </div>
         </motion.div>
-
       </div>
-
-    </section>
+    </AnimatePresence>
   );
 };
 
