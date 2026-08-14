@@ -47,15 +47,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       <div className="absolute top-1/2 -right-20 w-72 sm:w-80 h-72 sm:h-80 bg-[#E0E0E0] rounded-full blur-3xl opacity-40 pointer-events-none -z-10" />
       <div className="absolute inset-0 lab-grid-pattern opacity-40 pointer-events-none" />
 
-      {/* Floating Animated Botanical & Biochemical Icons */}
-      <motion.div
-        animate={{ y: [0, -12, 0], rotate: [0, 8, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-        className="hidden md:flex absolute top-28 right-[15%] w-10 h-10 rounded-2xl bg-[#FCE4EC] border border-[#F8BBD0] items-center justify-center text-[#2D2D2D] shadow-xs pointer-events-none -z-0 opacity-70"
-      >
-        <Leaf className="w-5 h-5 text-[#2D2D2D]" />
-      </motion.div>
-
       <motion.div
         animate={{ y: [0, 14, 0], rotate: [0, -10, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
@@ -65,39 +56,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       </motion.div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        
-        {/* Artistic Top Index Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 sm:pb-6 border-b border-[#E8E0E3] mb-8 sm:mb-10"
-        >
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] sm:tracking-[0.4em] font-bold text-[#8E8E8E] font-mono">
-              PORTFOLIO NO. 022/GIZI-UNW/2026
-            </span>
-            <span className="text-xs text-[#8E8E8E] hidden sm:inline">•</span>
-            <span className="text-xs text-[#666666] font-medium hidden md:inline">
-              Dietetik Klinis • Formulasi Pangan • Asuhan Gizi Terstandar
-            </span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3 text-xs text-[#666666] w-full sm:w-auto justify-between sm:justify-end">
-            <span className="flex items-center gap-1.5 bg-[#FCE4EC]/70 backdrop-blur-xs px-2.5 py-1 rounded-full border border-[#F8BBD0]/40 text-[#2D2D2D] font-medium text-[11px]">
-              <Calendar className="w-3.5 h-3.5 text-[#2D2D2D]" />
-              <span>Sidang: Q3 2026</span>
-            </span>
-            <button 
-              id="hero-copy-email-btn"
-              onClick={copyEmail}
-              className="text-[#2D2D2D] hover:text-[#F8BBD0] font-medium transition-colors cursor-pointer text-xs underline decoration-[#E8E0E3] underline-offset-4"
-            >
-              {copiedEmail ? '✓ Tersalin' : personalInfo.email}
-            </button>
-          </div>
-        </motion.div>
 
         {/* Artistic 2-Column Hero Structure */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
