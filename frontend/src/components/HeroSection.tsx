@@ -16,7 +16,7 @@ import {
   Wheat,
   Leaf
 } from 'lucide-react';
-import { personalInfo } from '../data/portfolioData';
+import { usePersonalInfo } from '../context/PersonalInfoContext';
 
 interface HeroSectionProps {
   onOpenResume: () => void;
@@ -31,6 +31,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onExploreSkripsi,
   onExploreWorkbench
 }) => {
+  const personalInfo = usePersonalInfo();
   const [activeTab, setActiveTab] = useState<'profil' | 'fokus' | 'metrik'>('profil');
   const [copiedEmail, setCopiedEmail] = useState(false);
 

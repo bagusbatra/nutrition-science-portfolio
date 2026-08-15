@@ -15,7 +15,10 @@ import {
   FlaskConical,
   ExternalLink
 } from 'lucide-react';
-import { personalInfo, skripsiResearch, rotationExperiences, skillsAndCompetencies } from '../data/portfolioData';
+import { skillsAndCompetencies } from '../data/portfolioData';
+import { usePersonalInfo } from '../context/PersonalInfoContext';
+import { useSkripsi } from '../context/SkripsiContext';
+import { useRotations } from '../context/RotationsContext';
 
 interface ResumeModalProps {
   isOpen: boolean;
@@ -23,6 +26,9 @@ interface ResumeModalProps {
 }
 
 export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => {
+  const personalInfo = usePersonalInfo();
+  const skripsiResearch = useSkripsi();
+  const rotationExperiences = useRotations();
   if (!isOpen) return null;
 
   const handlePrint = () => {

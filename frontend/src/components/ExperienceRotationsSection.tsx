@@ -12,13 +12,14 @@ import {
   Award,
   Layers
 } from 'lucide-react';
-import { rotationExperiences } from '../data/portfolioData';
+import { useRotations } from '../context/RotationsContext';
 
 export const ExperienceRotationsSection: React.FC = () => {
+  const rotationExperiences = useRotations();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const categories = [
-    { id: 'all', label: 'Semua Rotasi (4)' },
+    { id: 'all', label: `Semua Rotasi (${rotationExperiences.length})` },
     { id: 'Klinis (Dietetik RS)', label: 'Dietetik Klinis RS' },
     { id: 'MSPM (Food Service)', label: 'MSPM & Food Service' },
     { id: 'Gizi Masyarakat (Puskesmas)', label: 'Gizi Masyarakat' },

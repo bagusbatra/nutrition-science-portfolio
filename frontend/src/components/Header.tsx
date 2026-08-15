@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
 import { HeartPulse, FileText, Send, Sparkles, Menu, X, ArrowUpRight } from 'lucide-react';
-import { personalInfo } from '../data/portfolioData';
+import { usePersonalInfo } from '../context/PersonalInfoContext';
 
 interface HeaderProps {
   onOpenContact: () => void;
@@ -9,6 +9,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onOpenContact, onOpenResume }) => {
+  const personalInfo = usePersonalInfo();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');

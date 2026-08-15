@@ -14,9 +14,10 @@ import {
   Heart,
   ChevronRight
 } from 'lucide-react';
-import { clinicalCases } from '../data/portfolioData';
+import { useClinicalCases } from '../context/ClinicalCasesContext';
 
 export const ClinicalCasesSection: React.FC = () => {
+  const clinicalCases = useClinicalCases();
   const [selectedCaseId, setSelectedCaseId] = useState<string>(clinicalCases[0].id);
   const [activeStep, setActiveStep] = useState<'A' | 'D' | 'I' | 'ME'>('A');
 

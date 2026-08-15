@@ -12,10 +12,11 @@ import {
   ExternalLink,
   BookOpen
 } from 'lucide-react';
-import { mediaInfographics } from '../data/portfolioData';
+import { useMedia } from '../context/MediaContext';
 import { MediaInfographic } from '../types';
 
 export const MediaInfographicsSection: React.FC = () => {
+  const mediaInfographics = useMedia();
   const [selectedMedia, setSelectedMedia] = useState<MediaInfographic | null>(null);
 
   return (

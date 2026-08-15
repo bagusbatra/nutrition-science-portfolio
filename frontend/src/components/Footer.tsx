@@ -1,6 +1,6 @@
 import React from 'react';
 import { Heart, ArrowUp, Mail, Phone, MapPin, Sparkles, GraduationCap } from 'lucide-react';
-import { personalInfo } from '../data/portfolioData';
+import { usePersonalInfo } from '../context/PersonalInfoContext';
 
 interface FooterProps {
   onOpenResume: () => void;
@@ -9,6 +9,7 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onOpenResume, onOpenContact, onOpenGuestbook }) => {
+  const personalInfo = usePersonalInfo();
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

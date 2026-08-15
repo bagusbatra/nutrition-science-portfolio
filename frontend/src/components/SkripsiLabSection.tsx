@@ -15,9 +15,10 @@ import {
   PieChart as PieChartIcon,
   Leaf
 } from 'lucide-react';
-import { skripsiResearch } from '../data/portfolioData';
+import { useSkripsi } from '../context/SkripsiContext';
 
 export const SkripsiLabSection: React.FC = () => {
+  const skripsiResearch = useSkripsi();
   const [selectedFormulaCode, setSelectedFormulaCode] = useState<string>("F2 (Formulasi Terpilih ⭐)");
   const [showAbstractModal, setShowAbstractModal] = useState<boolean>(false);
   
@@ -25,7 +26,7 @@ export const SkripsiLabSection: React.FC = () => {
   const [simKelor, setSimKelor] = useState<number>(15);
   const [simBekatul, setSimBekatul] = useState<number>(15);
 
-  const selectedFormula = skripsiResearch.formulations.find(f => f.code === selectedFormulaCode) || skripsiResearch.formulations[2];
+  const selectedFormula = skripsiResearch.formulations.find(f => f.code === selectedFormulaCode) || skripsiResearch.formulations[0];
 
   // Calculated estimates for simulation
   const simFe = +(1.2 + (simKelor * 0.38) + (simBekatul * 0.08)).toFixed(2); // Fe in mg/100g

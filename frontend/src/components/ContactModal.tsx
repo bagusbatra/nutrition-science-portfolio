@@ -12,7 +12,7 @@ import {
   User, 
   FileText
 } from 'lucide-react';
-import { personalInfo } from '../data/portfolioData';
+import { usePersonalInfo } from '../context/PersonalInfoContext';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -20,6 +20,7 @@ interface ContactModalProps {
 }
 
 export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
+  const personalInfo = usePersonalInfo();
   const [senderName, setSenderName] = useState('');
   const [senderOrg, setSenderOrg] = useState('');
   const [senderEmail, setSenderEmail] = useState('');
