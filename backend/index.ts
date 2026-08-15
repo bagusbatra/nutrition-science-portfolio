@@ -16,6 +16,7 @@ import { skripsiRouter } from './routes/skripsi';
 import { clinicalCasesRouter } from './routes/clinicalCases';
 import { rotationsRouter } from './routes/rotations';
 import { mediaRouter } from './routes/media';
+import { skillsRouter } from './routes/skills';
 import { seedIfEmpty } from './seed';
 
 const app = express();
@@ -41,6 +42,7 @@ app.use('/api/content/skripsi', skripsiRouter);
 app.use('/api/content/kasus', clinicalCasesRouter);
 app.use('/api/content/rotasi', rotationsRouter);
 app.use('/api/content/galeri', mediaRouter);
+app.use('/api/content/kompetensi', skillsRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });

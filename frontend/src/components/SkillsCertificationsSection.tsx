@@ -10,9 +10,10 @@ import {
   FileCheck,
   Sparkles
 } from 'lucide-react';
-import { skillsAndCompetencies } from '../data/portfolioData';
+import { useSkills } from '../context/SkillsContext';
 
 export const SkillsCertificationsSection: React.FC = () => {
+  const skillsAndCompetencies = useSkills();
   return (
     <section id="skills" className="py-16 sm:py-20 bg-white relative border-b border-[#E8E0E3] overflow-hidden">
       

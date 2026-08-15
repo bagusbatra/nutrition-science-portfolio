@@ -307,20 +307,59 @@ File installer sudah dihapus dari project setelah instalasi selesai.
   - Hapus rotasi via konfirmasi inline → kembali ke 4 rotasi, terverifikasi via API. ✅
 
 ### 5.5 Iterasi 5 — Galeri Media & Infografis
-**Status:** `[ ]`
-- Backend: model+route CRUD penuh `MediaInfographic`.
-- Admin: list + form dengan list editor `keyPoints[]`, input warna (`accentColor` hex), pilihan
-  `thumbnailBg` (preset gradient atau input teks kelas Tailwind).
-- Refactor `MediaInfographicsSection`.
-- **DoD:** tambah/ubah/hapus 1 item media via admin reflect ke section Galeri.
+**Status:** `[x]` selesai & terverifikasi di browser + API
+- Backend: `backend/models/MediaInfographic.ts` (list, Mongo `_id`), `backend/routes/media.ts` full
+  CRUD dengan `asyncHandler` + `runValidators: true`, masuk `seedIfEmpty()`.
+- Frontend: `frontend/src/context/MediaContext.tsx` (map `_id` → `id`), masuk `PublicDataProviders`.
+- Admin: `frontend/src/admin/sections/MediaAdmin.tsx` — pola list-view/form-view sama seperti iterasi
+  sebelumnya, dropdown `category` (4 pilihan tetap), `ListFieldEditor` untuk `keyPoints[]`, input teks
+  untuk `thumbnailBg` (kelas gradient Tailwind, mis. `from-[#FDE2E4] to-[#FAD2E1]`) dengan **preview
+  gradient langsung di form**, dan input `accentColor` (hex) dengan swatch warna preview.
+- Refactor `MediaInfographicsSection` ke `useMedia()`.
+- **Keterbatasan yang disadari (bukan bug, konsekuensi arsitektur Tailwind):** `thumbnailBg` dirender
+  sebagai kelas Tailwind arbitrary-value (`bg-gradient-to-br ${thumbnailBg}`). Tailwind v4 men-scan
+  kelas dari source file saat build/dev, **bukan** dari data runtime/database — jadi kombinasi gradient
+  yang sama sekali baru (tidak pernah muncul sebagai teks literal di source, termasuk di
+  `portfolioData.ts` yang masih jadi seed) berisiko tidak ter-generate CSS-nya. Solusi aman untuk
+  sekarang: pakai salah satu dari 4 gradient yang sudah ada di seed data. Dicatat sebagai keterbatasan
+  yang diketahui, bukan diperbaiki di iterasi ini (perbaikan penuh butuh ganti ke inline CSS gradient,
+  di luar cakupan).
+- **Definition of Done — terverifikasi manual di browser + API:**
+  - Auto-seed jalan: log `[seed] MediaInfographic seeded from portfolioData.ts`. ✅
+  - List admin `/admin/galeri` menampilkan 4 media seed dengan thumbnail preview yang benar. ✅
+  - Tambah media baru lewat admin (pakai gradient existing) → backend tidak crash → tersimpan
+    (diverifikasi via `GET /api/content/galeri`, 5 dokumen). ✅
+  - Media baru muncul sebagai kartu ke-5 di section Galeri publik dengan data & gradient yang cocok;
+    modal "Lihat Media" menampilkan detail lengkap tanpa error. ✅
+  - Hapus media via konfirmasi inline → kembali ke 4 media, terverifikasi via API. ✅
 
 ### 5.6 Iterasi 6 — Kompetensi & Sertifikasi
-**Status:** `[ ]`
-- Backend: model+route `SkillsAndCompetencies` (singleton, 4 array).
-- Admin: 4 grup list editor — `clinical`/`foodService`/`software` ({name, level, desc}) dan
-  `certifications` ({name, issuer, year}).
-- Refactor `SkillsCertificationsSection` + bagian kompetensi di `ResumeModal`.
-- **DoD:** ubah salah satu dari 4 grup skill via admin reflect ke section Kompetensi & modal CV.
+**Status:** `[x]` selesai & terverifikasi di browser + API
+- Backend: `backend/models/SkillsAndCompetencies.ts` (singleton — bukan list, pola sama seperti
+  Iterasi 1/2), subdocument schema `{_id:false}` untuk `skillSchema` ({name, level, desc}) dan
+  `certificationSchema` ({name, issuer, year}), `backend/routes/skills.ts` (`GET /api/content/kompetensi`
+  publik, `PUT` dilindungi `requireAdmin`, `runValidators: true`), masuk `seedIfEmpty()`.
+- Frontend: `frontend/src/context/SkillsContext.tsx` (`useSkills()`), masuk `PublicDataProviders`.
+- Admin: `frontend/src/admin/sections/SkillsAdmin.tsx` — pola singleton-form (bukan list CRUD),
+  dua sub-komponen reusable lokal: `SkillGroupEditor` (dipakai 3x untuk `clinical`/`foodService`/
+  `software`) dan `CertificationGroupEditor` (untuk `certifications`), masing-masing dengan
+  tambah/ubah/hapus baris.
+- Refactor `SkillsCertificationsSection` ke `useSkills()`.
+- **Temuan saat refactor:** import `skillsAndCompetencies` di `ResumeModal.tsx` ternyata **dead code**
+  — section "Kompetensi Teknis & Perangkat Lunak" di CV modal sebenarnya prosa hardcode, tidak pernah
+  merujuk data itu di JSX. Import yang tidak terpakai dihapus sebagai bagian cleanup (tidak direfactor
+  ke `useSkills()` karena memang tidak dipakai — CV modal tetap prosa statis by design).
+- **Definition of Done — terverifikasi manual di browser + API:**
+  - Auto-seed jalan: log `[seed] SkillsAndCompetencies seeded from portfolioData.ts`. ✅
+  - Form admin `/admin/kompetensi` terisi lengkap sesuai seed (4 skill klinis, 3 MSPM, 4 software,
+    4 sertifikat). ✅
+  - Ubah level skill "Proses Asuhan Gizi Terstandar" dari "Mahir" → "Mahir (Uji Admin)" + tambah
+    sertifikat baru ("Sertifikat Uji Admin CMS") → simpan → backend tidak crash, tersimpan
+    (diverifikasi via `GET /api/content/kompetensi`). ✅
+  - Perubahan reflect ke section Kompetensi & Sertifikasi publik (kartu sertifikat ke-5 muncul dengan
+    data yang cocok). ✅
+  - Data uji dikembalikan ke kondisi seed asli (level "Mahir", 4 sertifikat) setelah verifikasi,
+    diverifikasi ulang via API. ✅
 
 ### 5.7 Iterasi 7 — Moderasi Buku Tamu
 **Status:** `[ ]`

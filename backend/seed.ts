@@ -4,12 +4,14 @@ import {
   clinicalCases,
   rotationExperiences,
   mediaInfographics,
+  skillsAndCompetencies,
 } from '../frontend/src/data/portfolioData';
 import { PersonalInfoModel } from './models/PersonalInfo';
 import { SkripsiResearchModel } from './models/SkripsiResearch';
 import { ClinicalCaseModel } from './models/ClinicalCase';
 import { RotationExperienceModel } from './models/RotationExperience';
 import { MediaInfographicModel } from './models/MediaInfographic';
+import { SkillsAndCompetenciesModel } from './models/SkillsAndCompetencies';
 
 // Seeds each content collection from the original static portfolioData.ts values,
 // but only the first time (collection empty) so admin edits are never overwritten.
@@ -43,5 +45,11 @@ export async function seedIfEmpty() {
   if (mediaCount === 0) {
     await MediaInfographicModel.insertMany(mediaInfographics.map(({ id, ...rest }) => rest));
     console.log('[seed] MediaInfographic seeded from portfolioData.ts');
+  }
+
+  const skillsCount = await SkillsAndCompetenciesModel.countDocuments();
+  if (skillsCount === 0) {
+    await SkillsAndCompetenciesModel.create(skillsAndCompetencies);
+    console.log('[seed] SkillsAndCompetencies seeded from portfolioData.ts');
   }
 }

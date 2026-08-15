@@ -15,7 +15,6 @@ import {
   FlaskConical,
   ExternalLink
 } from 'lucide-react';
-import { skillsAndCompetencies } from '../data/portfolioData';
 import { usePersonalInfo } from '../context/PersonalInfoContext';
 import { useSkripsi } from '../context/SkripsiContext';
 import { useRotations } from '../context/RotationsContext';
