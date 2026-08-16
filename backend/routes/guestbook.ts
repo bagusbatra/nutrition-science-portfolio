@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler';
+import { requireAdmin } from '../middleware/requireAdmin';
 import { GuestbookEntryModel } from '../models/GuestbookEntry';
 
 export const guestbookRouter = Router();
@@ -26,5 +27,17 @@ guestbookRouter.post(
       emoji,
     });
     res.status(201).json(entry);
+  })
+);
+
+guestbookRouter.delete(
+  '/:id',
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const deleted = await GuestbookEntryModel.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ error: 'Entri tidak ditemukan' });
+    }
+    res.json({ success: true });
   })
 );

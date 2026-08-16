@@ -362,17 +362,41 @@ File installer sudah dihapus dari project setelah instalasi selesai.
     diverifikasi ulang via API. ✅
 
 ### 5.7 Iterasi 7 — Moderasi Buku Tamu
-**Status:** `[ ]`
-- Backend: tambah `DELETE /api/guestbook/:id` (admin only) ke router yang sudah ada.
-- Admin: list entri guestbook (read-only) + tombol hapus.
-- **DoD:** admin hapus 1 entri guestbook → hilang juga dari modal Buku Tamu publik.
+**Status:** `[x]` selesai & terverifikasi di browser + API
+- Backend: tambah `DELETE /api/guestbook/:id` ke `backend/routes/guestbook.ts` yang sudah ada,
+  dilindungi `requireAdmin` + `asyncHandler`, balas `404` kalau id tidak ditemukan.
+- Admin: `frontend/src/admin/sections/GuestbookAdmin.tsx` — **bukan** pola list-view/form-view seperti
+  iterasi sebelumnya (tidak ada tambah/ubah, karena entri hanya boleh masuk lewat submission publik),
+  cukup list read-only + tombol hapus dengan konfirmasi inline dua-tombol ("Ya, hapus"/"Batal"), memakai
+  `GET /api/guestbook` (route publik yang sudah ada, dipakai ulang tanpa perubahan).
+- **Definition of Done — terverifikasi manual di browser + API:**
+  - `DELETE /api/guestbook/:id` tanpa sesi admin → `401 Unauthorized` (diverifikasi via `curl`). ✅
+  - Entri uji dibuat lewat `POST /api/guestbook` (mensimulasikan submission publik) → muncul di
+    `/admin/guestbook` dengan nama, role, pesan, emoji, dan tanggal yang benar. ✅
+  - Klik hapus → muncul konfirmasi inline → klik "Ya, hapus" → pesan "Entri dihapus." tampil, entri
+    hilang dari list. ✅
+  - Diverifikasi via `GET /api/guestbook` bahwa entri benar-benar terhapus dari MongoDB (bukan cuma
+    hilang dari state React). ✅
 
 ### 5.8 Iterasi 8 — Kotak Masuk Pesan Kontak
-**Status:** `[ ]`
-- Backend: tambah `GET /api/contact` + `DELETE /api/contact/:id` (admin only) — saat ini route GET
-  belum ada sama sekali.
-- Admin: tabel pesan masuk (nama, institusi, email, tujuan pesan, isi, tanggal) + tombol hapus.
-- **DoD:** kirim pesan lewat form "Say Hello" publik → muncul di kotak masuk admin; admin bisa hapus.
+**Status:** `[x]` selesai & terverifikasi di browser + API
+- Backend: tambah `GET /api/contact` (baru — sebelumnya route ini benar-benar tidak ada, hanya `POST`)
+  dan `DELETE /api/contact/:id` ke `backend/routes/contact.ts`, keduanya dilindungi `requireAdmin` +
+  `asyncHandler`. `POST /api/contact` (submission publik dari `ContactModal`) tetap tidak berubah/tidak
+  dilindungi, sesuai desain aslinya.
+- Admin: `frontend/src/admin/sections/ContactInboxAdmin.tsx` — pola sama seperti `GuestbookAdmin`
+  (list read-only + hapus dengan konfirmasi inline "Ya, hapus"/"Batal", tidak ada tambah/ubah), kartu
+  pesan menampilkan nama pengirim, institusi (kalau ada), email sebagai link `mailto:`, tag tujuan
+  pesan, isi pesan, dan tanggal.
+- **Definition of Done — terverifikasi manual di browser + API:**
+  - `GET /api/contact` tanpa sesi admin → `401 Unauthorized` (diverifikasi via `curl`); `POST /api/contact`
+    tetap bisa diakses publik tanpa sesi (tidak berubah dari sebelumnya). ✅
+  - Pesan uji dibuat lewat `POST /api/contact` (mensimulasikan submission dari `ContactModal` publik) →
+    muncul di `/admin/pesan` dengan nama, institusi, email (link mailto), tag tujuan pesan, isi pesan,
+    dan tanggal yang benar. ✅
+  - Klik hapus → konfirmasi inline → "Ya, hapus" → pesan "Pesan dihapus." tampil, kartu hilang dari list. ✅
+  - Diverifikasi ulang bahwa `GET /api/contact` (dengan sesi admin di browser) balik ke daftar kosong
+    setelah hapus — data benar-benar hilang dari MongoDB, bukan cuma dari state React. ✅
 
 ### 5.9 Iterasi 9 (Opsional) — Preset Kalkulator Meja Dietisien
 **Status:** `[ ]` — *tunggu konfirmasi apakah perlu, karena ini tool fungsional bukan konten narasi*

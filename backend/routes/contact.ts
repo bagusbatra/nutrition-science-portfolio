@@ -1,8 +1,18 @@
 import { Router } from 'express';
 import { asyncHandler } from '../middleware/asyncHandler';
+import { requireAdmin } from '../middleware/requireAdmin';
 import { ContactMessageModel } from '../models/ContactMessage';
 
 export const contactRouter = Router();
+
+contactRouter.get(
+  '/',
+  requireAdmin,
+  asyncHandler(async (_req, res) => {
+    const messages = await ContactMessageModel.find().sort({ createdAt: -1 });
+    res.json(messages);
+  })
+);
 
 contactRouter.post(
   '/',
@@ -19,5 +29,17 @@ contactRouter.post(
       message: message.trim(),
     });
     res.status(201).json(contactMessage);
+  })
+);
+
+contactRouter.delete(
+  '/:id',
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const deleted = await ContactMessageModel.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ error: 'Pesan tidak ditemukan' });
+    }
+    res.json({ success: true });
   })
 );

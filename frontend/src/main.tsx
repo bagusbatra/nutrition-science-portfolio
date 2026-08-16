@@ -14,6 +14,8 @@ import {ClinicalCasesAdmin} from './admin/sections/ClinicalCasesAdmin';
 import {RotationsAdmin} from './admin/sections/RotationsAdmin';
 import {MediaAdmin} from './admin/sections/MediaAdmin';
 import {SkillsAdmin} from './admin/sections/SkillsAdmin';
+import {GuestbookAdmin} from './admin/sections/GuestbookAdmin';
+import {ContactInboxAdmin} from './admin/sections/ContactInboxAdmin';
 import {PublicDataProviders} from './context/PublicDataProviders';
 
 // Each iteration adds its finished admin page here; sections not yet listed
@@ -25,6 +27,8 @@ const implementedAdminPages: Partial<Record<string, React.ComponentType>> = {
   rotasi: RotationsAdmin,
   galeri: MediaAdmin,
   kompetensi: SkillsAdmin,
+  guestbook: GuestbookAdmin,
+  pesan: ContactInboxAdmin,
 };
 
 createRoot(document.getElementById('root')!).render(
