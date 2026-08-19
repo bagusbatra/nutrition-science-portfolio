@@ -399,10 +399,10 @@ File installer sudah dihapus dari project setelah instalasi selesai.
     setelah hapus — data benar-benar hilang dari MongoDB, bukan cuma dari state React. ✅
 
 ### 5.9 Iterasi 9 (Opsional) — Preset Kalkulator Meja Dietisien
-**Status:** `[ ]` — *tunggu konfirmasi apakah perlu, karena ini tool fungsional bukan konten narasi*
-- `dietPresets` di `NutritionistWorkbench.tsx` saat ini hardcode di komponen, tidak terhubung
-  `portfolioData`. Kalau mau cakupan "setiap section" 100% termasuk tool ini, baru dikerjakan setelah
-  8 iterasi inti selesai.
+**Status:** `[skip]` — dilewati atas keputusan user setelah Iterasi 8 selesai (2026-08-16)
+- `dietPresets` di `NutritionistWorkbench.tsx` tetap hardcode di komponen, tidak terhubung ke
+  backend/admin. Keputusan sadar: ini tool kalkulator fungsional, bukan konten narasi portofolio,
+  jadi tidak masuk cakupan "setiap section index harus bisa diubah lewat admin" yang dimaksud user.
 
 ## 6. Hal yang Sengaja Di-scope-out (untuk sekarang)
 
@@ -416,6 +416,61 @@ File installer sudah dihapus dari project setelah instalasi selesai.
 
 ## 7. Urutan Eksekusi
 
-Iterasi dikerjakan berurutan **0 → 1 → 2 → ... → 8** (9 opsional, nanti dikonfirmasi ulang). Tiap iterasi
-akan di-lint (`npm run lint`) + build (`npm run build`) + dicek manual di browser sebelum ditandai `[x]`
-dan lanjut ke iterasi berikutnya. Status di dokumen ini akan diperbarui setiap iterasi kelar.
+Iterasi dikerjakan berurutan **0 → 1 → 2 → ... → 8**. Tiap iterasi di-lint (`npm run lint`) + build
+(`npm run build`) + dicek manual di browser sebelum ditandai `[x]` dan lanjut ke iterasi berikutnya.
+
+### 5.10 Iterasi 10 (Tambahan pasca-proyek inti) — Pengaturan Visibilitas Section
+**Status:** `[x]` selesai & terverifikasi di browser + API — diminta user setelah Iterasi 8 selesai
+(2026-08-16), di luar 9 iterasi awal.
+- **Requirement:** menu Setting di admin untuk mengaktif/nonaktifkan section mana saja yang tampil di
+  halaman index publik.
+- **Keputusan cakupan (dikonfirmasi user):** hanya **6 section konten** yang bisa di-toggle — Riset
+  Skripsi, Meja Dietisien (Kalkulator), Kasus Klinis, Rotasi Pengalaman, Galeri Media, Kompetensi.
+  Hero/Header/Footer **selalu tampil** (identitas & navigasi struktural, bukan "section konten").
+- Backend: `backend/models/SectionVisibility.ts` (singleton, 6 field boolean default `true`),
+  `backend/routes/sectionVisibility.ts` (`GET /api/settings/sections` publik — dipakai `App.tsx` untuk
+  render kondisional, `PUT` dilindungi `requireAdmin`), masuk `seedIfEmpty()` (bukan dari
+  `portfolioData.ts` — ini state pengaturan admin, bukan konten narasi, jadi seed default semua `true`
+  langsung di kode, bukan diimpor).
+- Frontend: `frontend/src/context/SectionVisibilityContext.tsx` (`useSectionVisibility()`, fallback
+  default semua `true` — resilient kalau API gagal diakses), masuk `PublicDataProviders.tsx`.
+- `App.tsx` membungkus 6 section dengan `{visibility.x && <Section />}`.
+- **Konsistensi navigasi (di luar cakupan awal permintaan, tapi perlu supaya tidak ada link mati):**
+  - `Header.tsx`: `navItems` di-filter — item nav disembunyikan kalau section-nya mati. Grup
+    "Pengalaman" (workbench+cases+rotations, satu label nav) anchor-nya otomatis pindah ke section
+    pertama yang masih hidup dalam grup itu (`experienceAnchor`), dan seluruh nav item "Pengalaman"
+    baru disembunyikan kalau ketiga-tiganya mati. Tombol quick-access "Kalkulator" di header ikut
+    disembunyikan kalau `workbench` mati.
+  - `Footer.tsx`: 5 link "Navigasi Halaman" (`#skripsi`, `#workbench`, `#cases`, `#rotations`,
+    `#media`) masing-masing dibungkus kondisional sesuai section-nya.
+  - Tombol CTA "Kalkulator Gizi" di Hero **tidak** ikut disembunyikan kalau `workbench` mati — dibiarkan
+    pakai perilaku `scrollTo` yang sudah ada (null-check aman, klik jadi no-op diam-diam kalau elemen
+    tidak ada), konsisten dengan pola yang sudah dipakai di codebase. Hero sendiri di luar cakupan
+    toggle sesuai keputusan user.
+- Admin: `frontend/src/admin/sections/SettingsAdmin.tsx` — pola singleton-form (seperti
+  `SkillsAdmin`/`PersonalInfoAdmin`), 6 checkbox dengan label & deskripsi jelas, PUT saat submit.
+  Terdaftar di `adminNav.ts` sebagai `{ path: 'pengaturan', label: 'Pengaturan' }` dan di
+  `main.tsx` → `implementedAdminPages`.
+- **Definition of Done — terverifikasi manual di browser + API:**
+  - Auto-seed jalan: log `[seed] SectionVisibility seeded (all sections visible by default)`, semua
+    field `true`. ✅
+  - Matikan "Meja Dietisien (Kalkulator)" di `/admin/pengaturan` → simpan → `GET /api/settings/sections`
+    menunjukkan `workbench: false`. ✅
+  - Di halaman publik: `document.getElementById('workbench')` hilang dari DOM, 6 id section lain tetap
+    ada; tombol "Kalkulator" di header hilang; nav "Pengalaman" tetap ada dan anchor-nya berpindah ke
+    `#cases` (section berikutnya dalam grup yang masih hidup); link "Meja Dietisien Interaktif" hilang
+    dari footer, 4 link lain di footer tetap ada. ✅
+  - Section dinyalakan kembali → tersimpan, diverifikasi via API kembali ke semua `true`. ✅
+
+## 8. Status Akhir Proyek
+
+**Selesai (2026-08-16).** Semua 8 iterasi inti (0–8) sudah dikerjakan, terverifikasi manual di browser +
+API, dan dicatat di atas. Iterasi 9 (opsional, preset kalkulator) dilewati atas keputusan user — lihat
+§5.9. Halaman `/login` + `/admin/*` sudah mencakup CRUD untuk seluruh section konten narasi di halaman
+index (Identitas, Riset Skripsi, Kasus Klinis, Rotasi Pengalaman, Galeri Media, Kompetensi) plus moderasi
+Buku Tamu dan Kotak Masuk, semua data tersimpan di MongoDB lokal, akses admin hanya lewat URL manual
+tanpa tombol apa pun di halaman publik, sesuai requirement asli di §1.
+
+Setelah itu ditambahkan **Iterasi 10** (§5.10, 2026-08-16): menu Pengaturan untuk mengaktif/nonaktifkan
+6 section konten di halaman index, termasuk penyesuaian navbar & footer supaya tidak ada link mati saat
+section dimatikan.

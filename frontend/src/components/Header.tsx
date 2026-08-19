@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
 import { HeartPulse, FileText, Send, Sparkles, Menu, X, ArrowUpRight } from 'lucide-react';
 import { usePersonalInfo } from '../context/PersonalInfoContext';
+import { useSectionVisibility } from '../context/SectionVisibilityContext';
 
 interface HeaderProps {
   onOpenContact: () => void;
@@ -10,6 +11,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenContact, onOpenResume }) => {
   const personalInfo = usePersonalInfo();
+  const visibility = useSectionVisibility();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -46,22 +48,32 @@ export const Header: React.FC<HeaderProps> = ({ onOpenContact, onOpenResume }) =
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // "Pengalaman" anchors to the first visible section among its group (workbench/cases/
+  // rotations) — if the admin turns off workbench, the link still lands somewhere real.
+  const experienceAnchor = visibility.workbench
+    ? 'workbench'
+    : visibility.cases
+    ? 'cases'
+    : visibility.rotations
+    ? 'rotations'
+    : null;
+
   const navItems = [
     { id: 'hero', label: 'Profil' },
-    { id: 'skripsi', label: 'Riset' },
-    { id: 'workbench', label: 'Pengalaman' },
-    { id: 'media', label: 'Galeri' },
-    { id: 'skills', label: 'Kompetensi' }
+    ...(visibility.skripsi ? [{ id: 'skripsi', label: 'Riset' }] : []),
+    ...(experienceAnchor ? [{ id: experienceAnchor, label: 'Pengalaman' }] : []),
+    ...(visibility.media ? [{ id: 'media', label: 'Galeri' }] : []),
+    ...(visibility.skills ? [{ id: 'skills', label: 'Kompetensi' }] : []),
   ];
 
   // Cases & rotations are sub-sections of "Pengalaman" — they share its nav highlight
-  // even though the nav link itself anchors to the first section (workbench).
+  // even though the nav link itself anchors to just one of the three (experienceAnchor).
   const navGroupForSection: Record<string, string> = {
     hero: 'hero',
     skripsi: 'skripsi',
-    workbench: 'workbench',
-    cases: 'workbench',
-    rotations: 'workbench',
+    workbench: experienceAnchor ?? 'workbench',
+    cases: experienceAnchor ?? 'cases',
+    rotations: experienceAnchor ?? 'rotations',
     media: 'media',
     skills: 'skills'
   };
@@ -177,16 +189,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenContact, onOpenResume }) =
 
             {/* Action Buttons */}
             <div className="hidden sm:flex items-center gap-2.5">
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                id="header-workbench-quick-btn"
-                onClick={() => scrollTo('workbench')}
-                className="px-3.5 py-2 rounded-full text-xs uppercase tracking-widest text-[#2D2D2D] border border-[#2D2D2D] hover:bg-[#2D2D2D] hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
-              >
-                <HeartPulse className="w-3.5 h-3.5" />
-                <span>Kalkulator</span>
-              </motion.button>
+              {visibility.workbench && (
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  id="header-workbench-quick-btn"
+                  onClick={() => scrollTo('workbench')}
+                  className="px-3.5 py-2 rounded-full text-xs uppercase tracking-widest text-[#2D2D2D] border border-[#2D2D2D] hover:bg-[#2D2D2D] hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  <HeartPulse className="w-3.5 h-3.5" />
+                  <span>Kalkulator</span>
+                </motion.button>
+              )}
 
               <motion.button
                 whileHover={{ scale: 1.03 }}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Heart, ArrowUp, Mail, Phone, MapPin, Sparkles, GraduationCap } from 'lucide-react';
 import { usePersonalInfo } from '../context/PersonalInfoContext';
+import { useSectionVisibility } from '../context/SectionVisibilityContext';
 
 interface FooterProps {
   onOpenResume: () => void;
@@ -10,6 +11,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onOpenResume, onOpenContact, onOpenGuestbook }) => {
   const personalInfo = usePersonalInfo();
+  const visibility = useSectionVisibility();
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -64,21 +66,31 @@ export const Footer: React.FC<FooterProps> = ({ onOpenResume, onOpenContact, onO
               Navigasi Halaman
             </span>
             <ul className="space-y-2 text-[#CCCCCC]">
-              <li>
-                <a href="#skripsi" className="hover:text-[#F8BBD0] transition-colors">Riset Skripsi & Uji Lab</a>
-              </li>
-              <li>
-                <a href="#workbench" className="hover:text-[#F8BBD0] transition-colors">Meja Dietisien Interaktif</a>
-              </li>
-              <li>
-                <a href="#cases" className="hover:text-[#F8BBD0] transition-colors">Studi Kasus Asuhan Gizi (ADIME)</a>
-              </li>
-              <li>
-                <a href="#rotations" className="hover:text-[#F8BBD0] transition-colors">Rotasi Klinis & PKL RS</a>
-              </li>
-              <li>
-                <a href="#media" className="hover:text-[#F8BBD0] transition-colors">Media Leaflet & Infografis</a>
-              </li>
+              {visibility.skripsi && (
+                <li>
+                  <a href="#skripsi" className="hover:text-[#F8BBD0] transition-colors">Riset Skripsi & Uji Lab</a>
+                </li>
+              )}
+              {visibility.workbench && (
+                <li>
+                  <a href="#workbench" className="hover:text-[#F8BBD0] transition-colors">Meja Dietisien Interaktif</a>
+                </li>
+              )}
+              {visibility.cases && (
+                <li>
+                  <a href="#cases" className="hover:text-[#F8BBD0] transition-colors">Studi Kasus Asuhan Gizi (ADIME)</a>
+                </li>
+              )}
+              {visibility.rotations && (
+                <li>
+                  <a href="#rotations" className="hover:text-[#F8BBD0] transition-colors">Rotasi Klinis & PKL RS</a>
+                </li>
+              )}
+              {visibility.media && (
+                <li>
+                  <a href="#media" className="hover:text-[#F8BBD0] transition-colors">Media Leaflet & Infografis</a>
+                </li>
+              )}
               <li>
                 <button
                   id="footer-open-guestbook-btn"

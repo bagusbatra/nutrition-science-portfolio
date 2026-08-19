@@ -13,4 +13,5 @@ export const adminSections: AdminSectionMeta[] = [
   { path: 'kompetensi', label: 'Kompetensi', iterationLabel: 'Iterasi 6' },
   { path: 'guestbook', label: 'Buku Tamu', iterationLabel: 'Iterasi 7' },
   { path: 'pesan', label: 'Kotak Masuk', iterationLabel: 'Iterasi 8' },
+  { path: 'pengaturan', label: 'Pengaturan', iterationLabel: 'Iterasi 10' },
 ];

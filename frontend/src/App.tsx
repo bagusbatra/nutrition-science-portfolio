@@ -12,8 +12,10 @@ import { GuestbookFloatingButton } from './components/GuestbookFloatingButton';
 import { ResumeModal } from './components/ResumeModal';
 import { ContactModal } from './components/ContactModal';
 import { Footer } from './components/Footer';
+import { useSectionVisibility } from './context/SectionVisibilityContext';
 
 export default function App() {
+  const visibility = useSectionVisibility();
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isGuestbookOpen, setIsGuestbookOpen] = useState(false);
@@ -51,22 +53,22 @@ export default function App() {
         />
 
         {/* 2. Flagship Skripsi Research & Food Formulation Lab */}
-        <SkripsiLabSection />
+        {visibility.skripsi && <SkripsiLabSection />}
 
         {/* 3. Interactive Nutritionist's Workbench & Clinical Calculator */}
-        <NutritionistWorkbench />
+        {visibility.workbench && <NutritionistWorkbench />}
 
         {/* 4. Clinical Case Studies (PAGT / ADIME Dossier) */}
-        <ClinicalCasesSection />
+        {visibility.cases && <ClinicalCasesSection />}
 
         {/* 5. Clinical Rotations & Fieldwork (RS, MSPM, Puskesmas) */}
-        <ExperienceRotationsSection />
+        {visibility.rotations && <ExperienceRotationsSection />}
 
         {/* 6. Nutrition Communication, Leaflets & Infographics Gallery */}
-        <MediaInfographicsSection />
+        {visibility.media && <MediaInfographicsSection />}
 
         {/* 7. Technical Skills & Verified Certifications */}
-        <SkillsCertificationsSection />
+        {visibility.skills && <SkillsCertificationsSection />}
       </main>
 
       {/* Footer */}

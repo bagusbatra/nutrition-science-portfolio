@@ -12,6 +12,7 @@ import { ClinicalCaseModel } from './models/ClinicalCase';
 import { RotationExperienceModel } from './models/RotationExperience';
 import { MediaInfographicModel } from './models/MediaInfographic';
 import { SkillsAndCompetenciesModel } from './models/SkillsAndCompetencies';
+import { SectionVisibilityModel } from './models/SectionVisibility';
 
 // Seeds each content collection from the original static portfolioData.ts values,
 // but only the first time (collection empty) so admin edits are never overwritten.
@@ -51,5 +52,15 @@ export async function seedIfEmpty() {
   if (skillsCount === 0) {
     await SkillsAndCompetenciesModel.create(skillsAndCompetencies);
     console.log('[seed] SkillsAndCompetencies seeded from portfolioData.ts');
+  }
+
+  const sectionVisibilityCount = await SectionVisibilityModel.countDocuments();
+  if (sectionVisibilityCount === 0) {
+    // Not derived from portfolioData.ts — this is admin-only settings state, not narrative
+    // content, so it seeds with everything visible by default rather than a static source.
+    await SectionVisibilityModel.create({
+      skripsi: true, workbench: true, cases: true, rotations: true, media: true, skills: true,
+    });
+    console.log('[seed] SectionVisibility seeded (all sections visible by default)');
   }
 }

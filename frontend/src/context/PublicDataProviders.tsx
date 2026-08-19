@@ -5,6 +5,7 @@ import { ClinicalCasesProvider } from './ClinicalCasesContext';
 import { RotationsProvider } from './RotationsContext';
 import { MediaProvider } from './MediaContext';
 import { SkillsProvider } from './SkillsContext';
+import { SectionVisibilityProvider } from './SectionVisibilityContext';
 
 // Composes every public-site data provider in one place so main.tsx doesn't have to
 // grow a new level of nesting each iteration — add new providers here instead.
@@ -14,7 +15,9 @@ export const PublicDataProviders: React.FC<{ children: React.ReactNode }> = ({ c
       <ClinicalCasesProvider>
         <RotationsProvider>
           <MediaProvider>
-            <SkillsProvider>{children}</SkillsProvider>
+            <SkillsProvider>
+              <SectionVisibilityProvider>{children}</SectionVisibilityProvider>
+            </SkillsProvider>
           </MediaProvider>
         </RotationsProvider>
       </ClinicalCasesProvider>
